@@ -21,7 +21,7 @@ Este projeto é um protótipo de um sistema de recomendação de produtos, desen
 # Estrutura do Projeto
 ```
 ├── App.py                # Código principal do sistema de recomendação
-├── requirements.txt      # Dependências do projeto
+├── commands.txt      # Dependências do projeto
 └── README.md             # Descrição do projeto
 ```
 ## Como Executar
