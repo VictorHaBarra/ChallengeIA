@@ -56,3 +56,7 @@ streamlit run App.py
 *Paulo Henrique Moreira Anguera - RM 99704*
 
 *Victor Hugo Astorino Barra Mansa - RM 550573*
+
+*Aleck Ramos Cappucci – RM551340 (2TDSA)*
+
+*Murilo Ribeiro Valerio da Silva - RM550858 (2TDSPF)*
