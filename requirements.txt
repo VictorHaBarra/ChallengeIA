@@ -3,4 +3,4 @@ streamlit
 pandas
 scikit-surprise
 scikit-learn
---use-feature=2020-resolver
+
