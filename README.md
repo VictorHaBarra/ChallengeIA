@@ -1,4 +1,6 @@
 # 🛍️ Sistema de Recomendação de Produtos
+Link no Streamlit
+https://fiap-challenge-ia.streamlit.app/
 Descrição do Projeto;
 
 Este projeto é um protótipo de um sistema de recomendação de produtos, desenvolvido com o objetivo de fornecer recomendações personalizadas com base no histórico de compras e nas preferências dos usuários. Utilizamos Machine Learning e técnicas de IA generativa para melhorar a experiência de recomendação.
