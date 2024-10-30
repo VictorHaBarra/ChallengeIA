@@ -1,0 +1,9 @@
+name: challengeia-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - streamlit
+  - pandas
+  - scikit-surprise
+  - scikit-learn
