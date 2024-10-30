@@ -41,12 +41,12 @@ model.fit(user_item_matrix)
 
 # Função para obter recomendações usando implicit
 def get_recommendations(user_id, product_data, n=3):
-    recommendations = model.recommend(user_id, user_item_matrix.T, N=n)
+    recommendations = model.recommend(user_id, user_item_matrix, N=n)  # Use user_item_matrix directly
     product_ids = [rec[0] for rec in recommendations]
     return product_data[product_data['ID do Produto'].isin(product_ids)]
 
 # Estilização com CSS
-st.markdown("""
+st.markdown(""" 
     <style>
     .stButton > button {
         background-color: #4CAF50;
