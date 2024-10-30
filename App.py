@@ -67,6 +67,11 @@ def get_recommendations(user_id, product_data, n=3):
         st.warning("Índice do usuário fora do intervalo.")  # Exibe uma mensagem se o índice do usuário estiver fora do intervalo
         return pd.DataFrame()
 
+    # Adiciona verificação se o usuário tem interações
+    if user_item_matrix[user_index].nnz == 0:
+        st.warning("Usuário não tem interações registradas.")  # Exibe mensagem se não houver interações
+        return pd.DataFrame()
+
     recommendations = model.recommend(user_index, user_item_matrix, N=n)  # Use user_item_matrix directly
     
     # Ajusta o índice de retorno para o ID do Produto
@@ -118,7 +123,7 @@ if st.button('🔍 Gerar Recomendações'):
     st.subheader("🛒 Recomendações de Produtos")
     
     if recomendacoes.empty:
-        st.warning("Nenhuma recomendação disponível. O usuário já comprou todos os produtos.")
+        st.warning("Nenhuma recomendação disponível. O usuário já comprou todos os produtos ou não tem interações.")
     else:
         for idx, row in recomendacoes.iterrows():
             # Cartão de produto estilizado
