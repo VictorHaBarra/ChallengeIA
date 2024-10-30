@@ -28,6 +28,9 @@ usuarios = pd.DataFrame({
 user_id_mapping = {user_id: idx for idx, user_id in enumerate(usuarios['ID do Usuário'])}
 num_users = len(user_id_mapping)
 
+# Verificação do mapeamento de usuários
+print("User ID Mapping:", user_id_mapping)  # Debugging line
+
 # Prepara a matriz de interação usuário-produto
 interactions = []
 for index, row in usuarios.iterrows():
@@ -56,6 +59,8 @@ def get_recommendations(user_id, product_data, n=3):
         return pd.DataFrame()  # Retorna um DataFrame vazio se o usuário não existir
     
     user_index = user_id_mapping[user_id]  # Mapeia o ID do usuário para o índice contínuo
+    print("User Index:", user_index)  # Debugging line
+    print("User-Item Matrix Shape:", user_item_matrix.shape)  # Debugging line
 
     # Garante que o índice do usuário está dentro do intervalo da matriz
     if user_index >= user_item_matrix.shape[0]:
