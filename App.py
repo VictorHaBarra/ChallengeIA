@@ -33,12 +33,18 @@ interactions = []
 for index, row in usuarios.iterrows():
     user_id = row['ID do Usuário']
     for product_id in row['Histórico de Compras']:
+        # Adiciona as interações na lista de interações
         interactions.append((user_id_mapping[user_id], product_id, 1))
 
 interaction_df = pd.DataFrame(interactions, columns=['user_id', 'product_id', 'purchase_count'])
+
+# Cria a matriz esparsa de usuário-produto
 user_item_matrix = sparse.coo_matrix(
     (interaction_df['purchase_count'], (interaction_df['user_id'], interaction_df['product_id']))
 ).tocsr()
+
+# Verifica a forma da matriz esparsa
+print("Shape of user_item_matrix:", user_item_matrix.shape)  # Debugging line
 
 # Treina o modelo ALS
 model.fit(user_item_matrix)
@@ -46,12 +52,19 @@ model.fit(user_item_matrix)
 # Função para obter recomendações usando implicit
 def get_recommendations(user_id, product_data, n=3):
     if user_id not in user_id_mapping:
+        st.warning("Usuário não encontrado.")  # Exibe uma mensagem se o usuário não existir
         return pd.DataFrame()  # Retorna um DataFrame vazio se o usuário não existir
     
     user_index = user_id_mapping[user_id]  # Mapeia o ID do usuário para o índice contínuo
+
+    # Garante que o índice do usuário está dentro do intervalo da matriz
+    if user_index >= user_item_matrix.shape[0]:
+        st.warning("Índice do usuário fora do intervalo.")  # Exibe uma mensagem se o índice do usuário estiver fora do intervalo
+        return pd.DataFrame()
+
     recommendations = model.recommend(user_index, user_item_matrix, N=n)  # Use user_item_matrix directly
     
-    # Ajuste o índice de retorno para o ID do Produto
+    # Ajusta o índice de retorno para o ID do Produto
     product_ids = [rec[0] + 1 for rec in recommendations]  # +1 para coincidir com os IDs de produtos em 'produtos'
     return product_data[product_data['ID do Produto'].isin(product_ids)]
 
