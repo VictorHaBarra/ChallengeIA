@@ -1,2 +1,0 @@
-pip install surprise
-pip install streamlit
