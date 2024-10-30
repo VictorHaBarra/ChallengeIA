@@ -1,23 +1,10 @@
 import streamlit as st
 import pandas as pd
-from surprise import Dataset, Reader, SVD
-from surprise.model_selection import train_test_split
+import scipy.sparse as sparse
+from implicit.als import AlternatingLeastSquares
 
-# Função para obter recomendações
-def get_recommendations(user_id, user_data, product_data, n=3):
-    # Obtenha o histórico de compras do usuário
-    historico = user_data.loc[user_data['ID do Usuário'] == user_id, 'Histórico de Compras'].values[0]
-    
-    # Filtrar os produtos que o usuário ainda não comprou
-    produtos_nao_comprados = product_data[~product_data['ID do Produto'].isin(historico)]
-    
-    # Ajustar o número de recomendações se for maior do que os produtos restantes
-    n_recomendacoes = min(n, len(produtos_nao_comprados))
-    
-    # Gerar as recomendações
-    recomendacoes = produtos_nao_comprados.sample(n_recomendacoes)
-    
-    return recomendacoes
+# Configurações do ALS
+model = AlternatingLeastSquares(factors=10, regularization=0.1, iterations=20)
 
 # Dados de produtos
 produtos = pd.DataFrame({
@@ -36,6 +23,27 @@ usuarios = pd.DataFrame({
     'Histórico de Compras': [[2, 4], [1, 3, 5], [1, 2, 4], [3, 5], [1, 4]],
     'Preferências': [['Cuidados com a Pele'], ['Barba', 'Cabelo'], ['Fragrâncias'], ['Cuidados com a Pele', 'Cabelo'], ['Barba']]
 })
+
+# Prepara a matriz de interação usuário-produto
+interactions = []
+for index, row in usuarios.iterrows():
+    user_id = row['ID do Usuário']
+    for product_id in row['Histórico de Compras']:
+        interactions.append((user_id, product_id, 1))
+
+interaction_df = pd.DataFrame(interactions, columns=['user_id', 'product_id', 'purchase_count'])
+user_item_matrix = sparse.coo_matrix(
+    (interaction_df['purchase_count'], (interaction_df['user_id'], interaction_df['product_id']))
+).tocsr()
+
+# Treina o modelo ALS
+model.fit(user_item_matrix)
+
+# Função para obter recomendações usando implicit
+def get_recommendations(user_id, product_data, n=3):
+    recommendations = model.recommend(user_id, user_item_matrix.T, N=n)
+    product_ids = [rec[0] for rec in recommendations]
+    return product_data[product_data['ID do Produto'].isin(product_ids)]
 
 # Estilização com CSS
 st.markdown("""
@@ -77,7 +85,7 @@ st.markdown(f"**Preferências**: {', '.join(user_info['Preferências'])}")
 
 # Botão para gerar recomendações
 if st.button('🔍 Gerar Recomendações'):
-    recomendacoes = get_recommendations(user_id, usuarios, produtos)
+    recomendacoes = get_recommendations(user_id, produtos)
     
     st.subheader("🛒 Recomendações de Produtos")
     
