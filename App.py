@@ -45,9 +45,14 @@ model.fit(user_item_matrix)
 
 # Função para obter recomendações usando implicit
 def get_recommendations(user_id, product_data, n=3):
+    if user_id not in user_id_mapping:
+        return pd.DataFrame()  # Retorna um DataFrame vazio se o usuário não existir
+    
     user_index = user_id_mapping[user_id]  # Mapeia o ID do usuário para o índice contínuo
     recommendations = model.recommend(user_index, user_item_matrix, N=n)  # Use user_item_matrix directly
-    product_ids = [rec[0] + 1 for rec in recommendations]  # +1 to match product IDs in produtos
+    
+    # Ajuste o índice de retorno para o ID do Produto
+    product_ids = [rec[0] + 1 for rec in recommendations]  # +1 para coincidir com os IDs de produtos em 'produtos'
     return product_data[product_data['ID do Produto'].isin(product_ids)]
 
 # Estilização com CSS
