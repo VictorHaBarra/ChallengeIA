@@ -24,7 +24,7 @@ Este projeto é um protótipo de um sistema de recomendação de produtos, desen
 # Estrutura do Projeto
 ```
 ├── App.py                # Código principal do sistema de recomendação
-├── commands.txt      # Dependências do projeto
+├── requeriments.txt      # Dependências do projeto
 └── README.md             # Descrição do projeto
 ```
 ## Como Executar
@@ -36,7 +36,7 @@ cd sistema-recomendacao
 ### Instalar as dependências: 
 - Utilize um ambiente virtual e instale as bibliotecas necessárias listadas no commands.txt:
 ```
-pip install -r commands.txt
+pip install -r requeriments.txt
 ```
 ### Executar a aplicação: 
 - Execute o comando abaixo para iniciar o servidor local do Streamlit:
